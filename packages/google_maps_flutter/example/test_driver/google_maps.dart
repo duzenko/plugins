@@ -3,6 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_driver/driver_extension.dart';
@@ -497,5 +499,39 @@ void main() {
 
     final GoogleMapController controller = await controllerCompleter.future;
     await controller.setMapStyle(null);
+  });
+
+  test('testSnapshot', () async {
+    final GlobalKey key = GlobalKey();
+    final Completer<GoogleMapController> controllerCompleter =
+        Completer<GoogleMapController>();
+    final Completer<Uint8List> snapshotCompleter = Completer<Uint8List>();
+
+    await pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: GoogleMap(
+        key: key,
+        initialCameraPosition: _kInitialCameraPosition,
+        onMapCreated: (GoogleMapController controller) {
+          controllerCompleter.complete(controller);
+        },
+        onSnapshot: (Uint8List data) {
+          snapshotCompleter.complete(data);
+        },
+      ),
+    ));
+
+    final GoogleMapController controller = await controllerCompleter.future;
+    try {
+      await controller.snapshot();
+      final Uint8List data = await snapshotCompleter.future;
+      final ui.Codec codec = await ui.instantiateImageCodec(data);
+      final ui.FrameInfo frame = await codec.getNextFrame();
+      final ui.Image img = frame.image;
+      final RenderBox box = key.currentContext.findRenderObject();
+      expect(ui.window.devicePixelRatio * box.size.height, img.height);
+    } catch (error) {
+      fail('snapshot exception ' + error.toString());
+    }
   });
 }
