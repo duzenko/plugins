@@ -1,6 +1,10 @@
-## 0.5.17+1
+## 0.5.19
 
-* Allow BitmapDescriptor scaling override
+* Add support for holes in Polygons
+
+## 0.5.18
+
+* Fixed build issue on iOS.
 
 ## 0.5.17
 
