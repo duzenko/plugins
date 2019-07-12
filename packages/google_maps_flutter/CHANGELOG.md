@@ -1,3 +1,7 @@
+## 0.5.20+1
+
+* Allow (de-)serialization of CameraPosition
+
 ## 0.5.20
 
 * Add map toolbar support
