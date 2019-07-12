@@ -298,6 +298,11 @@ final class GoogleMapController
           result.success(googleMap.getUiSettings().isCompassEnabled());
           break;
         }
+      case "map#isMapToolbarEnabled":
+        {
+          result.success(googleMap.getUiSettings().isMapToolbarEnabled());
+          break;
+        }
       case "map#getMinMaxZoomLevels":
         {
           List<Float> zoomLevels = new ArrayList<>(2);
@@ -513,6 +518,11 @@ final class GoogleMapController
   @Override
   public void setCompassEnabled(boolean compassEnabled) {
     googleMap.getUiSettings().setCompassEnabled(compassEnabled);
+  }
+
+  @Override
+  public void setMapToolbarEnabled(boolean mapToolbarEnabled) {
+    googleMap.getUiSettings().setMapToolbarEnabled(mapToolbarEnabled);
   }
 
   @Override
