@@ -1,6 +1,6 @@
 ## 0.5.20+1
 
-* Allow (de-)serialization of CameraPosition
+* Breaking change fix for BitmapDescriptor scaling override
 
 ## 0.5.20
 
