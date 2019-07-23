@@ -29,6 +29,8 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
   final ImageLabeler _cloudImageLabeler =
       FirebaseVision.instance.cloudImageLabeler();
   final TextRecognizer _recognizer = FirebaseVision.instance.textRecognizer();
+  final TextRecognizer _cloudRecognizer =
+      FirebaseVision.instance.cloudTextRecognizer();
 
   @override
   void initState() {
@@ -72,6 +74,8 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
     switch (_currentDetector) {
       case Detector.text:
         return _recognizer.processImage;
+      case Detector.cloudText:
+        return _cloudRecognizer.processImage;
       case Detector.barcode:
         return _barcodeDetector.detectInImage;
       case Detector.label:
@@ -119,7 +123,8 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
         painter = LabelDetectorPainter(imageSize, _scanResults);
         break;
       default:
-        assert(_currentDetector == Detector.text);
+        assert(_currentDetector == Detector.text ||
+            _currentDetector == Detector.cloudText);
         if (_scanResults is! VisionText) return noResultsText;
         painter = TextDetectorPainter(imageSize, _scanResults);
     }
@@ -180,27 +185,31 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
               _currentDetector = result;
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<Detector>>[
-                  const PopupMenuItem<Detector>(
-                    child: Text('Detect Barcode'),
-                    value: Detector.barcode,
-                  ),
-                  const PopupMenuItem<Detector>(
-                    child: Text('Detect Face'),
-                    value: Detector.face,
-                  ),
-                  const PopupMenuItem<Detector>(
-                    child: Text('Detect Label'),
-                    value: Detector.label,
-                  ),
-                  const PopupMenuItem<Detector>(
-                    child: Text('Detect Cloud Label'),
-                    value: Detector.cloudLabel,
-                  ),
-                  const PopupMenuItem<Detector>(
-                    child: Text('Detect Text'),
-                    value: Detector.text,
-                  ),
-                ],
+              const PopupMenuItem<Detector>(
+                child: Text('Detect Barcode'),
+                value: Detector.barcode,
+              ),
+              const PopupMenuItem<Detector>(
+                child: Text('Detect Face'),
+                value: Detector.face,
+              ),
+              const PopupMenuItem<Detector>(
+                child: Text('Detect Label'),
+                value: Detector.label,
+              ),
+              const PopupMenuItem<Detector>(
+                child: Text('Detect Cloud Label'),
+                value: Detector.cloudLabel,
+              ),
+              const PopupMenuItem<Detector>(
+                child: Text('Detect Text'),
+                value: Detector.text,
+              ),
+              const PopupMenuItem<Detector>(
+                child: Text('Detect Cloud Text'),
+                value: Detector.cloudText,
+              ),
+            ],
           ),
         ],
       ),
@@ -222,6 +231,7 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
       _imageLabeler.close();
       _cloudImageLabeler.close();
       _recognizer.close();
+      _cloudRecognizer.close();
     });
 
     _currentDetector = null;

@@ -1,6 +1,6 @@
 ## 0.5.20+1
 
-* Breaking change fix for BitmapDescriptor scaling override
+* Marker drag event
 
 ## 0.5.20
 
