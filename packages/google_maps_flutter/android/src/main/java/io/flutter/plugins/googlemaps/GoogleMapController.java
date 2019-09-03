@@ -435,7 +435,7 @@ final class GoogleMapController
   @Override
   public void onSnapshotReady(Bitmap bitmap) {
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
     byte[] byteArray = stream.toByteArray();
     bitmap.recycle();
     methodChannel.invokeMethod("map#onSnapshot", byteArray);
